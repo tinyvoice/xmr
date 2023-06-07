@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # [rights]  Copyright 2023 tinyvoice at github https://github.com/tinyvoice
 # [license] Apache 2.0 License https://www.apache.org/licenses/LICENSE-2.0
-# [repo]    https://github.com/tinyvoice/xmr/seed-management/trezor-xmr-recovery.py
+# [repo]    https://github.com/tinyvoice/xmr/blob/main/seed-managment/trezor-xmr-recovery.py
 # [tipjar]  https://github.com/tinyvoice/xmr/blob/main/tipjar.txt
+# [ref]     https://www.reddit.com/r/Monero/comments/1433ymb
 # [req]     pip install click==8.1.3 trezor==0.13.7 monero==1.1.1 ecdsa==0.18.0 ed25519==1.5 shamir_mnemonic==0.2.2
 # [note]    This script is for emergancy recovery of Monero funds from a
 # [note]    Trezor-T hardware wallet using a Standard mnemonic or Shamir (Trezor Advanced) mnemonic shares.
@@ -15,7 +16,7 @@
 # source xmr.venv/bin/activate ### LINUX AND MACOS ONLY
 # pip3 install --upgrade pip setuptools wheel
 # pip3 install click trezor monero ecdsa ed25519 shamir_mnemonic
-# python3 slip-10-xmr-recovery.py
+# python3 trezor-xmr-recovery.py
 
 ## REFERENCES ##
 #
