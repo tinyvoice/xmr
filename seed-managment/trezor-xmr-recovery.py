@@ -54,7 +54,7 @@ from shamir_mnemonic.share import Share
 from shamir_mnemonic.utils import MnemonicError
 
 
-VERSION=0.3
+VERSION=0.4
 privdev = 0x80000000
 
 FINISHED = style("\u2713", fg="green", bold=True)
@@ -235,11 +235,8 @@ def print_keys_from_mnemonic(derivation, mnemonic, passphrase = ""):
     bip39_seed = Mnemonic("english").to_seed(mnemonic, passphrase)
     pub, priv = get_keys(bip39_seed.hex(), parse_path(derivation))
     seed = monero.seed.Seed(priv.hex())
-    pub_hex = '12' + seed.public_spend_key() + seed.public_view_key()
-    chksum = monero.keccak.keccak_256(bytes.fromhex(pub_hex)).digest().hex()
-    address = monero.base58.encode(pub_hex + chksum[:8])
-    print_results(mnemonic, bip39_seed.hex(), derivation, priv, seed, address)
-    return address
+    print_results(mnemonic, bip39_seed.hex(), derivation, priv, seed)
+    return seed
 
 def print_keys_from_seed(derivation, bip39_seed):
     pub, priv = get_keys(bip39_seed, parse_path(derivation))
@@ -247,11 +244,11 @@ def print_keys_from_seed(derivation, bip39_seed):
     pub_hex = '12' + seed.public_spend_key() + seed.public_view_key()
     chksum = monero.keccak.keccak_256(bytes.fromhex(pub_hex)).digest().hex()
     address = monero.base58.encode(pub_hex + chksum[:8])
-    print_results("N/A", bip39_seed, derivation, priv, seed, address)
+    print_results("[Shamir Shares Used]", bip39_seed, derivation, priv, seed)
     return address
     
-def print_results(mnemonic, bip39_seed, derivation, priv, seed, address):
-    print("----- RESULTS -----\n")
+def print_results(mnemonic, bip39_seed, derivation, priv, seed):
+    print("\n----- RESULTS -----\n")
     print("BIP39 Mnemonic:", mnemonic)
     print("BIP39 Seed:", bip39_seed)
     print("SLIP10 Derivation:", derivation)
@@ -263,11 +260,12 @@ def print_results(mnemonic, bip39_seed, derivation, priv, seed, address):
 		)
     print(group_str)
     print()
-    print("Monero Address:", address)
-    print("Monero Public Spend:", seed.public_spend_key())
-    print("Monero Public View:", seed.public_view_key())
+    print("Monero Address:", seed.public_address())
+    print("Monero Seed:", seed.hex)
     print("Monero Private Spend:", seed.secret_spend_key())
     print("Monero Private View:", seed.secret_view_key())
+    print("Monero Public Spend:", seed.public_spend_key())
+    print("Monero Public View:", seed.public_view_key())
     print("\n----- END RESULTS -----\n")
     
 
@@ -278,7 +276,7 @@ print("Version: ", VERSION, "\n")
 click.echo(style("WARNING: ", fg="red") + "ONLY run this program on an air-gapped (no internet connection) and secured computer. This program reads and uses your private key.\n")
 
 while True:
-    start_mnemonic = input("Enter your Trezor Standard backup phrase or a Shamir backup phrase: ")
+    start_mnemonic = input("Enter your Trezor Standard backup phrase or a Trezor Advanced (Shamir) backup phrase: ")
     start_mnemonic = start_mnemonic.strip()
     mnemonic_words = start_mnemonic.split()
 
