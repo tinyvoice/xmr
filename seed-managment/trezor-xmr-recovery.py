@@ -54,7 +54,7 @@ from shamir_mnemonic.share import Share
 from shamir_mnemonic.utils import MnemonicError
 
 
-VERSION=0.4
+VERSION=0.5
 privdev = 0x80000000
 
 FINISHED = style("\u2713", fg="green", bold=True)
@@ -136,7 +136,6 @@ def recover_shamir(passphrase_prompt: bool, start_mnemonic_str) -> None:
         click.echo("Recovery failed")
         sys.exit(1)
     click.secho("SUCCESS!", fg="green", bold=True)
-    
     return master_secret.hex()
 
 def int_to_string(x, pad):
@@ -231,26 +230,27 @@ def get_keys(seedhex, derivationpath):
     return p,k
 
 
+def get_keys_from_seed(derivation, bip39_seedhex):
+    pub, priv = get_keys(bip39_seedhex, parse_path(derivation))
+    seed = monero.seed.Seed(priv.hex())
+    seed = monero.seed.Seed(seed.secret_spend_key())
+    return priv, seed
+
 def print_keys_from_mnemonic(derivation, mnemonic, passphrase = ""):
     bip39_seed = Mnemonic("english").to_seed(mnemonic, passphrase)
-    pub, priv = get_keys(bip39_seed.hex(), parse_path(derivation))
-    seed = monero.seed.Seed(priv.hex())
+    priv, seed = get_keys_from_seed(derivation, bip39_seed.hex())
     print_results(mnemonic, bip39_seed.hex(), derivation, priv, seed)
     return seed
 
-def print_keys_from_seed(derivation, bip39_seed):
-    pub, priv = get_keys(bip39_seed, parse_path(derivation))
-    seed = monero.seed.Seed(priv.hex())
-    pub_hex = '12' + seed.public_spend_key() + seed.public_view_key()
-    chksum = monero.keccak.keccak_256(bytes.fromhex(pub_hex)).digest().hex()
-    address = monero.base58.encode(pub_hex + chksum[:8])
-    print_results("[Shamir Shares Used]", bip39_seed, derivation, priv, seed)
-    return address
+def print_keys_from_seed(derivation, bip39_seedhex):
+    priv, seed = get_keys_from_seed(derivation, bip39_seedhex)
+    print_results("[Shamir Shares Used]", bip39_seedhex, derivation, priv, seed)
+    return seed
     
-def print_results(mnemonic, bip39_seed, derivation, priv, seed):
+def print_results(mnemonic, bip39_seedhex, derivation, priv, seed):
     print("\n----- RESULTS -----\n")
     print("BIP39 Mnemonic:", mnemonic)
-    print("BIP39 Seed:", bip39_seed)
+    print("BIP39 Seed:", bip39_seedhex)
     print("SLIP10 Derivation:", derivation)
     print("SLIP10 Seed at Derivation:", priv.hex())
     print()
@@ -286,11 +286,11 @@ while True:
             print("\n")
             print_keys_from_mnemonic(derivation, start_mnemonic, your_passphrase)
             break
-    elif len(mnemonic_words) == 20 or len(mnemonic_words) == 33:
+    elif len(mnemonic_words) >= 20 or len(mnemonic_words) == 33:
     # Input phrase is a Trezor Shamir share
-            seed = recover_shamir(True, start_mnemonic)
+            bip39_seedhex = recover_shamir(True, start_mnemonic)
             print()
-            print_keys_from_seed(derivation, seed)
+            print_keys_from_seed(derivation, bip39_seedhex)
             break
     else:
             click.echo(style("\n\nERROR: ", fg="red") + "Incorrect formatting or word count. Make sure there are no leading or trailing carriage returns. Please restart the program.\n")
