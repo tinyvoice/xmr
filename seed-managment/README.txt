@@ -11,7 +11,7 @@ I took the work u/brianddk did and combined it with Trezor's own Shamir recovery
 TO INSTALL AND RUN
 
 pip3 install --upgrade pip setuptools wheel
-pip3 install click==8.1.3 trezor==0.13.7 monero==1.1.1 ecdsa==0.18.0 ed25519==1.5 shamir_mnemonic==0.2.2
+pip3 install click==8.1.3 trezor==0.13.7 monero==1.1.1 ecdsa==0.18.0 ed25519==1.5 shamir_mnemonic==0.3.0
 
 ### Run to interactively recover Monero seed phrase
 python3 trezor-xmr-recovery.py
