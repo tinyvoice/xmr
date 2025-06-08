@@ -1,5 +1,5 @@
 If you found any of my work useful, please consider leaving a tip to enable future work and improvements.
 
-XMR: 8BakNLFcqwt8KJiSZk2tpm4WNoAEBKdAJQo3Wz69mzLu49Vc9zDuyoHVTZxghauQAxatYg8eSSq1jHWLuXDxJFBN9VeTvft
-BTC: bc1qp8h0yashvgl8mcn8p2yfttlplmw5v0j4g79fyx
-BCH: qq220lz79xgdh2szxv2sw2qqgltyepyg8qa4h5623q
+XMR: 8AJHtz8tD2v4axtLJP9zPFdEV27rWSLZvg4giy59pRcGeeRbpH164uRiasgx6ShKQHbRprsoiu3F8UZ4Y9BiFckV4c5uVpZ
+BTC: bc1q7yd8q9dpfjytez5nu095dxgrav6hkx2tg68h54
+BCH: qpu4dwk2njf28k9w85z0gchy2cqhgfsavcvr24uhp6
